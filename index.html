@@ -267,6 +267,13 @@
             border-radius: 10px;
         }
         
+        .audio-info {
+            margin: 1rem 0;
+            text-align: center;
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+        
         footer {
             text-align: center;
             margin-top: 2rem;
@@ -339,6 +346,11 @@
             <h2>Sua entrevista está pronta!</h2>
             <p>Clique no botão abaixo para baixar o arquivo MP3 final</p>
             
+            <div class="audio-info">
+                <p id="audioDuration">Duração: calculando...</p>
+                <p id="audioSize">Tamanho: calculando...</p>
+            </div>
+            
             <div class="audio-preview">
                 <p>Prévia do áudio:</p>
                 <audio id="audioPreview" controls></audio>
@@ -358,9 +370,6 @@
     <audio id="introAudio" src="inicio.mp3" preload="auto"></audio>
     <audio id="outroAudio" src="fim.mp3" preload="auto"></audio>
 
-    <!-- Biblioteca para manipulação de áudio -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/lamejs/1.2.0/lame.min.js"></script>
-    
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             // Elementos da interface
@@ -379,6 +388,8 @@
             const introAudio = document.getElementById('introAudio');
             const outroAudio = document.getElementById('outroAudio');
             const audioPreview = document.getElementById('audioPreview');
+            const audioDuration = document.getElementById('audioDuration');
+            const audioSize = document.getElementById('audioSize');
             
             // Variáveis de controle
             let isRecording = false;
@@ -407,11 +418,26 @@
             // Iniciar gravação
             startBtn.addEventListener('click', async function() {
                 try {
-                    audioStream = await navigator.mediaDevices.getUserMedia({ audio: true });
-                    mediaRecorder = new MediaRecorder(audioStream);
+                    // Limpar chunks anteriores
+                    audioChunks = [];
+                    
+                    audioStream = await navigator.mediaDevices.getUserMedia({ 
+                        audio: {
+                            echoCancellation: true,
+                            noiseSuppression: true,
+                            sampleRate: 44100,
+                            channelCount: 1
+                        } 
+                    });
+                    
+                    mediaRecorder = new MediaRecorder(audioStream, {
+                        mimeType: 'audio/webm;codecs=opus'
+                    });
                     
                     mediaRecorder.ondataavailable = function(event) {
-                        audioChunks.push(event.data);
+                        if (event.data.size > 0) {
+                            audioChunks.push(event.data);
+                        }
                     };
                     
                     mediaRecorder.onstop = function() {
@@ -419,7 +445,8 @@
                         processRecording();
                     };
                     
-                    mediaRecorder.start();
+                    // Iniciar gravação com um timeslice maior para evitar perda de dados
+                    mediaRecorder.start(1000); // Coletar dados a cada segundo
                     isRecording = true;
                     startTime = new Date().getTime();
                     timerInterval = setInterval(updateTimer, 1000);
@@ -458,6 +485,7 @@
             // Parar gravação
             stopBtn.addEventListener('click', function() {
                 if (mediaRecorder && mediaRecorder.state !== 'inactive') {
+                    // Parar a gravação primeiro
                     mediaRecorder.stop();
                     isRecording = false;
                     clearInterval(timerInterval);
@@ -497,15 +525,15 @@
                         processingStatus.textContent = 'Adicionando finalização...';
                     } else {
                         processingStatus.textContent = 'Convertendo para MP3...';
-                    // Na prática, aqui você faria a conversão real para MP3
-                        // Para este exemplo, vamos simular a conversão
-                        if (progress >= 95) {
-                            finalAudioBlob = audioBlob;
-                        }
                     }
                     
                     if (progress >= 100) {
                         clearInterval(progressInterval);
+                        
+                        // Criar o áudio final (simulação)
+                        // Em um cenário real, você precisaria de um backend para combinar os áudios
+                        finalAudioBlob = audioBlob;
+                        
                         setTimeout(() => {
                             processingSection.style.display = 'none';
                             downloadSection.style.display = 'block';
@@ -513,6 +541,20 @@
                             // Criar URL para prévia do áudio
                             const audioUrl = URL.createObjectURL(finalAudioBlob);
                             audioPreview.src = audioUrl;
+                            
+                            // Calcular duração
+                            const audio = new Audio();
+                            audio.src = audioUrl;
+                            audio.onloadedmetadata = function() {
+                                const duration = audio.duration;
+                                const minutes = Math.floor(duration / 60);
+                                const seconds = Math.floor(duration % 60);
+                                audioDuration.textContent = `Duração: ${minutes}:${seconds.toString().padStart(2, '0')}`;
+                            };
+                            
+                            // Calcular tamanho
+                            const sizeInMB = (finalAudioBlob.size / (1024 * 1024)).toFixed(2);
+                            audioSize.textContent = `Tamanho: ${sizeInMB} MB`;
                         }, 500);
                     }
                 }, 200);
