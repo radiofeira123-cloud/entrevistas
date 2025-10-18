@@ -2,80 +2,94 @@
 <html lang="pt-BR">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Gravador de Entrevista — Bonito & Intuitivo</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <title>Gravador de Entrevista — Mobile otimizado</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
   <script src="https://unpkg.com/lamejs@1.2.0/lame.min.js"></script>
   <style>
-    :root{
-      --bg:#0f172a; --card:#0b1220aa; --glass: rgba(255,255,255,0.06); --accent:#06b6d4; --accent-2:#7c3aed; --muted:#94a3b8;
-    }
+    :root{--bg:#071428;--card-grad:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));--accent:#06b6d4;--accent-2:#7c3aed;--muted:#9fb0c8}
     *{box-sizing:border-box}
-    body{font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial;color:#e6eef6;margin:0;min-height:100vh;background:linear-gradient(180deg,#071025 0%, #071428 60%);display:flex;align-items:center;justify-content:center;padding:28px}
-    .wrap{width:100%;max-width:940px}
-    .card{background:linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01));border-radius:14px;padding:22px;box-shadow:0 10px 30px rgba(2,6,23,0.6);backdrop-filter:blur(6px)}
-    header{display:flex;align-items:center;gap:16px}
-    header h1{margin:0;font-size:20px}
+    html,body{height:100%;margin:0}
+    body{font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial;color:#e6eef6;background:var(--bg);-webkit-font-smoothing:antialiased;display:flex;align-items:center;justify-content:center;padding:20px}
+
+    /* container */
+    .wrap{width:100%;max-width:980px}
+    .card{background:var(--card-grad);border-radius:14px;padding:18px;box-shadow:0 10px 30px rgba(2,6,23,0.6);backdrop-filter:blur(6px)}
+
+    header{display:flex;align-items:center;gap:12px}
+    header h1{margin:0;font-size:18px}
     header p{margin:0;color:var(--muted);font-size:13px}
 
-    .controls{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}
-    .btn{display:inline-flex;align-items:center;gap:10px;padding:10px 14px;border-radius:10px;border:0;cursor:pointer;font-weight:600}
-    .btn.primary{background:linear-gradient(90deg,var(--accent),var(--accent-2));color:#04202a}
+    .grid{display:flex;gap:16px;margin-top:12px}
+    .left{flex:1}
+    .right{width:320px}
+
+    .controls{display:flex;gap:10px;flex-wrap:wrap}
+    .btn{display:inline-flex;align-items:center;gap:10px;padding:10px 14px;border-radius:10px;border:0;cursor:pointer;font-weight:700;font-size:15px}
+    .btn.primary{background:linear-gradient(90deg,var(--accent),var(--accent-2));color:#002628}
     .btn.ghost{background:transparent;border:1px solid rgba(255,255,255,0.06);color:#dbeafe}
     .btn.warn{background:#ef4444;color:#fff}
     .btn.disabled{opacity:.45;cursor:not-allowed}
 
-    .left{flex:1}
-    .right{width:320px;margin-left:18px}
-
-    .meter{height:8px;background:rgba(255,255,255,0.04);border-radius:8px;overflow:hidden;margin-top:8px}
+    .meter{height:8px;background:rgba(255,255,255,0.03);border-radius:8px;overflow:hidden;margin-top:10px}
     .meter > i{display:block;height:100%;width:0%;background:linear-gradient(90deg,#34d399,#06b6d4)}
 
-    #wave{width:100%;height:80px;background:linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.02));border-radius:8px;margin-top:12px}
+    canvas#wave{width:100%;height:80px;border-radius:8px;margin-top:12px;display:block}
 
     .files{display:flex;gap:8px;align-items:center;margin-top:12px}
     .file-input{flex:1;display:flex;gap:8px;align-items:center}
-    .file-input input[type=file]{display:none}
     .file-label{padding:8px 10px;border-radius:8px;background:rgba(255,255,255,0.02);border:1px dashed rgba(255,255,255,0.03);font-size:13px;color:var(--muted);cursor:pointer}
 
     .status{margin-top:12px;color:var(--muted);font-size:13px}
-
-    audio{width:100%;margin-top:14px;border-radius:8px}
-
+    audio{width:100%;margin-top:12px;border-radius:8px}
     .download{display:flex;gap:8px;align-items:center;margin-top:12px}
-    .download a{display:inline-block}
-
     footer{margin-top:14px;color:var(--muted);font-size:12px}
 
-    @media(max-width:920px){
-      .right{width:100%;margin-left:0;margin-top:16px}
-      header{flex-direction:column;align-items:flex-start}
-      .grid{display:block}
+    /* mobile-first adjustments */
+    @media(min-width:720px){
+      body{padding:28px}
+      .card{padding:22px}
     }
+
+    /* MOBILE OPTIMIZATIONS */
+    @media(max-width:720px){
+      body{padding:12px}
+      header{align-items:flex-start}
+      .grid{flex-direction:column}
+      .right{width:100%}
+      .controls{flex-direction:column}
+      .btn{width:100%;padding:14px;border-radius:12px;font-size:17px}
+      canvas#wave{height:60px}
+      .file-label{font-size:14px;padding:12px}
+      /* sticky bottom controls for quick access */
+      .sticky-controls{position:fixed;left:12px;right:12px;bottom:12px;z-index:60;padding:10px;background:linear-gradient(180deg, rgba(2,6,23,0.85), rgba(2,6,23,0.95));border-radius:14px;display:flex;gap:8px}
+      .card{padding-bottom:96px}
+    }
+
   </style>
 </head>
 <body>
   <div class="wrap">
-    <div class="card">
+    <div class="card" id="mainCard">
       <header>
-        <div>
+        <div style="flex:1">
           <h1>Gravador de Entrevista</h1>
-          <p>Grave entrevistas com intro/fim, veja prévia e baixe em MP3 — tudo no navegador.</p>
+          <p>Grave com intro/outro e baixe em MP3 — otimizado para celular.</p>
         </div>
-        <div style="margin-left:auto;text-align:right">
+        <div style="text-align:right;min-width:80px">
           <strong id="timer">00:00</strong>
-          <div style="font-size:12px;color:var(--muted)">Duração atual</div>
+          <div style="font-size:12px;color:var(--muted)">Duração</div>
         </div>
       </header>
 
-      <div class="grid" style="display:flex;gap:18px;margin-top:12px;align-items:flex-start">
+      <div class="grid">
         <div class="left">
-          <div class="controls">
-            <button id="startBtn" class="btn primary">▶ Iniciar gravação</button>
+          <div class="controls" id="controlsTop">
+            <button id="startBtn" class="btn primary">▶ Iniciar</button>
             <button id="pauseBtn" class="btn ghost disabled">II Pausar</button>
             <button id="resumeBtn" class="btn ghost disabled">↻ Retomar</button>
             <button id="stopBtn" class="btn warn disabled">■ Concluir</button>
-            <button id="exportBtn" class="btn ghost disabled">✚ Intro+Fim → Gerar MP3</button>
+            <button id="exportBtn" class="btn ghost disabled">✚ Gerar MP3</button>
           </div>
 
           <div class="meter" aria-hidden>
@@ -95,26 +109,24 @@
             </div>
           </div>
 
-          <div class="status">Status: <span id="statusText">Pronto — clique em Iniciar para gravar</span></div>
+          <div class="status">Status: <span id="statusText">Pronto — toque em Iniciar</span></div>
 
           <audio id="preview" controls></audio>
 
-          <div class="download" style="display:flex;gap:8px">
+          <div class="download">
             <a id="downloadLink" style="display:none" download="entrevista.mp3"><button class="btn primary">⬇️ Baixar MP3</button></a>
             <button id="replayBtn" class="btn ghost" style="display:none">▶ Reproduzir</button>
           </div>
-
         </div>
 
-        <div class="right">
+        <div class="right" id="rightPanel">
           <div style="background:rgba(255,255,255,0.02);padding:12px;border-radius:10px">
             <h3 style="margin:0 0 8px 0">Como usar</h3>
             <ol style="margin:0 0 0 18px;color:var(--muted)">
               <li>Permita acesso ao microfone.</li>
-              <li>Use Iniciar / Pausar / Retomar para controlar a gravação.</li>
-              <li>Concluir gravação para preparar o arquivo.</li>
-              <li>Opcional: selecione arquivos locais de <em>inicio.mp3</em> e <em>fim.mp3</em> ou deixe com os nomes na mesma pasta.</li>
-              <li>Clique em "Gerar MP3" e depois em baixar.</li>
+              <li>Use Iniciar / Pausar /Retomar / Concluir.</li>
+              <li>Selecione <em>inicio.mp3</em> e <em>fim.mp3</em> ou deixe na mesma pasta.</li>
+              <li>Toque em Gerar MP3 e depois Baixar.</li>
             </ol>
           </div>
 
@@ -126,18 +138,27 @@
 
           <div style="margin-top:12px;background:rgba(255,255,255,0.02);padding:12px;border-radius:10px">
             <h4 style="margin:0 0 8px 0">Dica</h4>
-            <div style="color:var(--muted);font-size:13px">Para obter melhor qualidade, grave em local silencioso e mantenha o microfone próximo à boca.</div>
+            <div style="color:var(--muted);font-size:13px">Segure firme o celular e aproxime o microfone para melhor captação.</div>
           </div>
         </div>
 
       </div>
 
-      <footer>Coloque <strong>inicio.mp3</strong> e <strong>fim.mp3</strong> na mesma pasta do HTML se não usar os botões de seleção. Codificação MP3 feita com <em>lamejs</em>.</footer>
+      <footer>Se não selecionar intro/outro, coloque <strong>inicio.mp3</strong> e <strong>fim.mp3</strong> na mesma pasta do HTML. Codificação feita com <em>lamejs</em>.</footer>
     </div>
+  </div>
+
+  <!-- sticky mobile controls (rendered on small screens) -->
+  <div id="stickyControls" class="sticky-controls" style="display:none">
+    <button id="startBtnMobile" class="btn primary">▶</button>
+    <button id="pauseBtnMobile" class="btn ghost disabled">II</button>
+    <button id="stopBtnMobile" class="btn warn disabled">■</button>
+    <button id="exportBtnMobile" class="btn ghost disabled">MP3</button>
   </div>
 
 <script>
 (async function(){
+  // elements
   const startBtn = document.getElementById('startBtn');
   const pauseBtn = document.getElementById('pauseBtn');
   const resumeBtn = document.getElementById('resumeBtn');
@@ -153,6 +174,13 @@
   const bitrateRange = document.getElementById('bitrateRange');
   const bitrateLabel = document.getElementById('bitrateLabel');
 
+  // mobile sticky controls
+  const sticky = document.getElementById('stickyControls');
+  const startBtnMobile = document.getElementById('startBtnMobile');
+  const pauseBtnMobile = document.getElementById('pauseBtnMobile');
+  const stopBtnMobile = document.getElementById('stopBtnMobile');
+  const exportBtnMobile = document.getElementById('exportBtnMobile');
+
   const inicioInput = document.getElementById('inicioFile');
   const fimInput = document.getElementById('fimFile');
   const inicioLabel = document.getElementById('inicioLabel');
@@ -162,34 +190,36 @@
   let chunks = [];
   let recordingBlob = null;
   let streamRef = null;
-
   let startTime = 0, elapsed = 0, timerInterval = null;
 
+  // audio context & analyser; use lower fft on mobile to save CPU
   const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
   let analyser = audioCtx.createAnalyser();
-  analyser.fftSize = 2048;
+  analyser.fftSize = (window.innerWidth < 720) ? 1024 : 2048;
   const bufferLength = analyser.frequencyBinCount;
   const dataArray = new Uint8Array(bufferLength);
 
-  // canvas setup
-  const canvas = waveCanv;
-  const canvasCtx = canvas.getContext('2d');
-  function resizeCanvas(){ canvas.width = canvas.clientWidth * devicePixelRatio; canvas.height = canvas.clientHeight * devicePixelRatio; }
+  function resizeCanvas(){
+    const dpr = devicePixelRatio || 1;
+    waveCanv.width = waveCanv.clientWidth * dpr;
+    waveCanv.height = Math.max(48, waveCanv.clientHeight) * dpr;
+  }
   resizeCanvas(); window.addEventListener('resize', resizeCanvas);
+  const canvasCtx = waveCanv.getContext('2d');
 
   function drawWave(){
     requestAnimationFrame(drawWave);
     analyser.getByteTimeDomainData(dataArray);
     canvasCtx.fillStyle = 'rgba(255,255,255,0.01)';
-    canvasCtx.fillRect(0,0,canvas.width,canvas.height);
-    canvasCtx.lineWidth = 2 * devicePixelRatio;
+    canvasCtx.fillRect(0,0,waveCanv.width,waveCanv.height);
+    canvasCtx.lineWidth = 2 * (devicePixelRatio||1);
     canvasCtx.strokeStyle = 'rgba(255,255,255,0.14)';
     canvasCtx.beginPath();
-    const sliceWidth = canvas.width / bufferLength;
+    const sliceWidth = waveCanv.width / bufferLength;
     let x = 0;
     for(let i=0;i<bufferLength;i++){
       const v = dataArray[i] / 128.0;
-      const y = (v * canvas.height) / 2;
+      const y = (v * waveCanv.height) / 2;
       if(i===0) canvasCtx.moveTo(x,y); else canvasCtx.lineTo(x,y);
       x += sliceWidth;
     }
@@ -198,8 +228,7 @@
   drawWave();
 
   function setStatus(s){ statusText.textContent = s; }
-
-  function enable(el, val){ if(val){ el.classList.remove('disabled'); el.disabled = false; } else { el.classList.add('disabled'); el.disabled = true; } }
+  function enable(el, val){ if(!el) return; if(val){ el.classList.remove('disabled'); el.disabled = false; } else { el.classList.add('disabled'); el.disabled = true; } }
 
   function startTimer(){ startTime = Date.now(); timerInterval = setInterval(()=>{
     elapsed = Math.floor((Date.now() - startTime)/1000);
@@ -209,7 +238,7 @@
   },250); }
   function stopTimer(){ clearInterval(timerInterval); }
 
-  startBtn.addEventListener('click', async ()=>{
+  async function startRecording(){
     try{
       setStatus('Pedindo permissão ao microfone...');
       const s = await navigator.mediaDevices.getUserMedia({ audio: true });
@@ -217,7 +246,6 @@
       mediaRecorder = new MediaRecorder(s);
       chunks = [];
 
-      // connect analyser for visualization
       const src = audioCtx.createMediaStreamSource(s);
       src.connect(analyser);
 
@@ -225,74 +253,48 @@
       mediaRecorder.onstop = ()=>{
         recordingBlob = new Blob(chunks, { type: chunks[0]?.type || 'audio/webm' });
         preview.src = URL.createObjectURL(recordingBlob);
-        exportBtn.disabled = false;
-        enable(exportBtn, true);
-        setStatus('Gravação pronta. Clique em "Gerar MP3" para adicionar intro/outro.');
-        // stop tracks
+        enable(exportBtn, true); enable(exportBtnMobile, true);
+        setStatus('Gravação pronta — gerar MP3.');
         if(streamRef){ streamRef.getTracks().forEach(t=>t.stop()); streamRef=null; }
         stopTimer();
       };
 
       mediaRecorder.start();
-      setStatus('Gravando — pressione Pausar ou Concluir');
-      enable(pauseBtn, true);
-      enable(stopBtn, true);
-      enable(startBtn, false);
+      setStatus('Gravando — toque para pausar ou concluir');
+      enable(pauseBtn, true); enable(pauseBtnMobile, true);
+      enable(stopBtn, true); enable(stopBtnMobile, true);
+      enable(startBtn, false); enable(startBtnMobile, false);
       startTimer();
 
-      // update level meter
-      function levelLoop(){
+      // level meter loop (cheap)
+      (function levelLoop(){
         analyser.getByteFrequencyData(dataArray);
-        // quick RMS
         let sum=0; for(let i=0;i<dataArray.length;i++){ sum += dataArray[i]*dataArray[i]; }
         const rms = Math.sqrt(sum / dataArray.length) / 128;
         levelBar.style.width = Math.min(100, rms*150) + '%';
         requestAnimationFrame(levelLoop);
-      }
-      levelLoop();
-
-      // connect analyser to audio context destination (for waveform only, no audible echo)
-      // (we do not connect to destination to avoid feedback)
+      })();
 
     }catch(err){ console.error(err); setStatus('Erro: '+err.message); }
-  });
+  }
 
-  pauseBtn.addEventListener('click', ()=>{
-    if(mediaRecorder && mediaRecorder.state === 'recording'){
-      mediaRecorder.pause();
-      setStatus('Gravação pausada');
-      enable(pauseBtn, false);
-      enable(resumeBtn, true);
-      stopTimer();
-    }
-  });
+  // hook desktop and mobile buttons
+  startBtn.addEventListener('click', startRecording);
+  startBtnMobile.addEventListener('click', startRecording);
 
-  resumeBtn.addEventListener('click', ()=>{
-    if(mediaRecorder && mediaRecorder.state === 'paused'){
-      mediaRecorder.resume();
-      setStatus('Gravando...');
-      enable(pauseBtn, true);
-      enable(resumeBtn, false);
-      startTimer();
-    }
-  });
+  pauseBtn.addEventListener('click', ()=>{ if(mediaRecorder && mediaRecorder.state==='recording'){ mediaRecorder.pause(); setStatus('Pausado'); enable(pauseBtn,false); enable(pauseBtnMobile,false); enable(resumeBtn,true); enable(pauseBtnMobile,false); stopTimer(); } });
+  pauseBtnMobile.addEventListener('click', ()=>{ if(mediaRecorder && mediaRecorder.state==='recording'){ mediaRecorder.pause(); setStatus('Pausado'); enable(pauseBtn,false); enable(pauseBtnMobile,false); enable(resumeBtn,true); stopTimer(); } });
 
-  stopBtn.addEventListener('click', ()=>{
-    if(mediaRecorder && (mediaRecorder.state === 'recording' || mediaRecorder.state === 'paused')){
-      mediaRecorder.stop();
-      setStatus('Finalizando...');
-      enable(stopBtn, false);
-      enable(pauseBtn, false);
-      enable(resumeBtn, false);
-      enable(startBtn, true);
-    }
-  });
+  resumeBtn.addEventListener('click', ()=>{ if(mediaRecorder && mediaRecorder.state==='paused'){ mediaRecorder.resume(); setStatus('Gravando...'); enable(pauseBtn,true); enable(pauseBtnMobile,true); enable(resumeBtn,false); startTimer(); } });
+
+  stopBtn.addEventListener('click', ()=>{ if(mediaRecorder && (mediaRecorder.state==='recording' || mediaRecorder.state==='paused')){ mediaRecorder.stop(); setStatus('Finalizando...'); enable(stopBtn,false); enable(stopBtnMobile,false); enable(pauseBtn,false); enable(pauseBtnMobile,false); enable(startBtn,true); enable(startBtnMobile,true); } });
+  stopBtnMobile.addEventListener('click', ()=>{ if(mediaRecorder && (mediaRecorder.state==='recording' || mediaRecorder.state==='paused')){ mediaRecorder.stop(); setStatus('Finalizando...'); enable(stopBtn,false); enable(stopBtnMobile,false); enable(startBtn,true); enable(startBtnMobile,true); } });
 
   replayBtn.addEventListener('click', ()=>{ if(preview.src) preview.play(); });
 
   bitrateRange.addEventListener('input', ()=>{ bitrateLabel.textContent = bitrateRange.value + ' kbps'; });
 
-  // util: decode audio file (from file input or relative path) to AudioBuffer
+  // file loaders and helpers
   async function fetchAndDecodeFile(fileInput, fallbackName){
     try{
       if(fileInput && fileInput.files && fileInput.files.length){
@@ -305,80 +307,63 @@
         const ab = await resp.arrayBuffer();
         return await audioCtx.decodeAudioData(ab.slice(0));
       }
-    }catch(e){ console.warn('Não conseguiu carregar', fallbackName, e); return null; }
+    }catch(e){ console.warn('Não carregou', fallbackName, e); return null; }
   }
 
   function toMonoFloat32(buffer){
-    const ch = buffer.numberOfChannels;
-    const len = buffer.length;
-    const result = new Float32Array(len);
-    for(let c=0;c<ch;c++){
-      const data = buffer.getChannelData(c);
-      for(let i=0;i<len;i++) result[i] = (result[i] || 0) + data[i] / ch;
-    }
-    return result;
+    const ch = buffer.numberOfChannels; const len = buffer.length; const result = new Float32Array(len);
+    for(let c=0;c<ch;c++){ const data = buffer.getChannelData(c); for(let i=0;i<len;i++) result[i] = (result[i] || 0) + data[i] / ch; } return result;
   }
-  function concatFloat32(arrays){
-    let totalLen = arrays.reduce((s,a)=>s+a.length,0);
-    const out = new Float32Array(totalLen);
-    let offset = 0; for(const a of arrays){ out.set(a, offset); offset += a.length; } return out;
-  }
-  function floatTo16BitPCM(float32){
-    const l = float32.length; const out = new Int16Array(l);
-    for(let i=0;i<l;i++){ let s = Math.max(-1, Math.min(1, float32[i])); out[i] = s < 0 ? s * 0x8000 : s * 0x7FFF; }
-    return out;
-  }
+  function concatFloat32(arrays){ let totalLen = arrays.reduce((s,a)=>s+a.length,0); const out = new Float32Array(totalLen); let offset = 0; for(const a of arrays){ out.set(a, offset); offset += a.length; } return out; }
+  function floatTo16BitPCM(float32){ const l = float32.length; const out = new Int16Array(l); for(let i=0;i<l;i++){ let s = Math.max(-1, Math.min(1, float32[i])); out[i] = s < 0 ? s * 0x8000 : s * 0x7FFF; } return out; }
 
-  exportBtn.addEventListener('click', async ()=>{
+  async function doExport(){
     if(!recordingBlob){ setStatus('Nenhuma gravação disponível.'); return; }
-    enable(exportBtn, false);
+    enable(exportBtn, false); enable(exportBtnMobile, false);
     setStatus('Preparando arquivos...');
-
     try{
       const [introBuf, outroBuf] = await Promise.all([
         fetchAndDecodeFile(inicioInput, 'inicio.mp3'),
         fetchAndDecodeFile(fimInput, 'fim.mp3')
       ]);
-
       const recAB = await recordingBlob.arrayBuffer();
       const recBuf = await audioCtx.decodeAudioData(recAB.slice(0));
-
       const segments = [];
       if(introBuf) segments.push(toMonoFloat32(introBuf));
       segments.push(toMonoFloat32(recBuf));
       if(outroBuf) segments.push(toMonoFloat32(outroBuf));
-
       const combined = concatFloat32(segments);
       const sampleRate = recBuf.sampleRate || audioCtx.sampleRate || 44100;
-
       setStatus('Codificando MP3 — aguarde...');
 
+      // encode with lamejs (chunk sizes tuned for mobile)
       const bitrate = parseInt(bitrateRange.value,10) || 128;
       const mp3Encoder = new lamejs.Mp3Encoder(1, sampleRate, bitrate);
       const samples16 = floatTo16BitPCM(combined);
-
       const mp3Data = [];
-      const maxSamples = 1152 * 8;
+      const maxSamples = 1152 * 6;
       for(let i=0;i<samples16.length;i+=maxSamples){
         const chunk = samples16.subarray(i, i+maxSamples);
         const mp3buf = mp3Encoder.encodeBuffer(chunk);
         if(mp3buf.length>0) mp3Data.push(new Int8Array(mp3buf));
       }
       const mp3buf = mp3Encoder.flush(); if(mp3buf.length>0) mp3Data.push(new Int8Array(mp3buf));
-
       const mp3Blob = new Blob(mp3Data, { type: 'audio/mpeg' });
       const url = URL.createObjectURL(mp3Blob);
-      downloadLink.href = url; downloadLink.style.display = 'inline-block';
-      preview.src = url; replayBtn.style.display = 'inline-flex';
-      setStatus('MP3 pronto — clique em Baixar');
-      downloadLink.download = 'entrevista.mp3';
+      downloadLink.href = url; downloadLink.style.display = 'inline-block'; preview.src = url; replayBtn.style.display = 'inline-flex'; setStatus('MP3 pronto — toque em Baixar'); downloadLink.download = 'entrevista.mp3';
+    }catch(err){ console.error(err); setStatus('Erro ao gerar MP3: '+(err.message||err)); enable(exportBtn,true); enable(exportBtnMobile,true); }
+  }
 
-    }catch(err){ console.error(err); setStatus('Erro: '+ (err.message || err)); enable(exportBtn, true); }
-  });
+  exportBtn.addEventListener('click', doExport);
+  exportBtnMobile.addEventListener('click', doExport);
 
-  // show file names when selected
+  // wire file inputs labels
   inicioInput.addEventListener('change', ()=>{ inicioLabel.textContent = inicioInput.files.length ? inicioInput.files[0].name : 'Selecionar intro (inicio.mp3)'; });
   fimInput.addEventListener('change', ()=>{ fimLabel.textContent = fimInput.files.length ? fimInput.files[0].name : 'Selecionar fim (fim.mp3)'; });
+
+  // show sticky controls on mobile
+  function updateSticky(){ if(window.innerWidth <= 720){ sticky.style.display = 'flex'; } else { sticky.style.display = 'none'; } }
+  updateSticky(); window.addEventListener('resize', updateSticky);
 
 })();
 </script>
