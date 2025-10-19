@@ -165,61 +165,12 @@
       margin-bottom: 20px;
     }
 
-    .meter {
-      height: 6px;
-      background: rgba(255, 255, 255, 0.05);
-      border-radius: 10px;
-      overflow: hidden;
-      margin-bottom: 12px;
-    }
-
-    .meter > .level {
-      display: block;
-      height: 100%;
-      width: 0%;
-      background: linear-gradient(90deg, var(--accent), var(--secondary));
-      border-radius: 10px;
-      transition: width 0.1s ease;
-    }
-
     canvas#wave {
       width: 100%;
       height: 80px;
       border-radius: 12px;
       display: block;
       background: rgba(0, 0, 0, 0.2);
-    }
-
-    .file-inputs {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-      margin-bottom: 20px;
-    }
-
-    .file-input {
-      display: flex;
-      flex-direction: column;
-    }
-
-    .file-label {
-      padding: 14px 16px;
-      border-radius: 12px;
-      background: rgba(255, 255, 255, 0.03);
-      border: 1px dashed rgba(255, 255, 255, 0.1);
-      font-size: 14px;
-      color: var(--text-muted);
-      cursor: pointer;
-      transition: all 0.2s ease;
-      text-align: center;
-    }
-
-    .file-label:active {
-      background: rgba(255, 255, 255, 0.07);
-    }
-
-    .file-input input {
-      display: none;
     }
 
     .status {
@@ -284,49 +235,6 @@
 
     .info-list li {
       margin-bottom: 8px;
-    }
-
-    .settings {
-      margin-top: 16px;
-      padding-top: 16px;
-      border-top: 1px solid rgba(255, 255, 255, 0.05);
-    }
-
-    .setting-item {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 12px;
-    }
-
-    .setting-label {
-      font-size: 14px;
-      color: var(--text-muted);
-    }
-
-    .setting-value {
-      font-size: 14px;
-      font-weight: 600;
-      color: var(--text);
-    }
-
-    .slider {
-      width: 100%;
-      height: 6px;
-      border-radius: 10px;
-      background: rgba(255, 255, 255, 0.1);
-      outline: none;
-      -webkit-appearance: none;
-    }
-
-    .slider::-webkit-slider-thumb {
-      -webkit-appearance: none;
-      width: 20px;
-      height: 20px;
-      border-radius: 50%;
-      background: var(--primary);
-      cursor: pointer;
-      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
     }
 
     footer {
@@ -401,7 +309,7 @@
         <div class="title-section">
           <div>
             <h1 class="app-title">Gravador de Entrevista</h1>
-            <p class="app-subtitle">Grave, adicione intro/outro e exporte em MP3</p>
+            <p class="app-subtitle">Grave e combine com intro/outro automaticamente</p>
           </div>
           <div class="timer-container">
             <div class="timer" id="timer">00:00</div>
@@ -414,31 +322,11 @@
         <button id="startBtn" class="btn primary">▶ Iniciar</button>
         <button id="pauseBtn" class="btn secondary disabled">II Pausar</button>
         <button id="stopBtn" class="btn danger disabled">■ Parar</button>
-        <button id="exportBtn" class="btn secondary disabled">Exportar MP3</button>
+        <button id="continueBtn" class="btn secondary disabled">Continuar</button>
       </div>
 
       <div class="visualizer-container">
-        <div class="meter">
-          <div class="level" id="levelBar"></div>
-        </div>
         <canvas id="wave"></canvas>
-      </div>
-
-      <div class="file-inputs">
-        <div class="file-input">
-          <label class="file-label" id="inicioLabel">
-            <span>➕ Adicionar Intro (inicio.mp3)</span>
-            <small>Será adicionado automaticamente ao início</small>
-          </label>
-          <input id="inicioFile" type="file" accept="audio/*">
-        </div>
-        <div class="file-input">
-          <label class="file-label" id="fimLabel">
-            <span>➕ Adicionar Outro (fim.mp3)</span>
-            <small>Será adicionado automaticamente ao final</small>
-          </label>
-          <input id="fimFile" type="file" accept="audio/*">
-        </div>
       </div>
 
       <div class="status">
@@ -460,21 +348,13 @@
           <li>Permita o acesso ao microfone quando solicitado</li>
           <li>Toque em "Iniciar" para começar a gravar</li>
           <li>Use "Pausar" e "Parar" conforme necessário</li>
-          <li>Adicione áudios de abertura e encerramento (obrigatórios)</li>
-          <li>Toque em "Exportar MP3" e depois "Baixar MP3"</li>
+          <li>Toque em "Continuar" para processar o áudio</li>
+          <li>Baixe o MP3 final com intro e outro incluídos</li>
         </ol>
-
-        <div class="settings">
-          <div class="setting-item">
-            <span class="setting-label">Qualidade do áudio:</span>
-            <span class="setting-value" id="bitrateLabel">128 kbps</span>
-          </div>
-          <input id="bitrateRange" type="range" min="64" max="320" value="128" class="slider">
-        </div>
       </div>
 
       <footer>
-        <p>Coloque os arquivos <strong>inicio.mp3</strong> e <strong>fim.mp3</strong> na mesma pasta do gravador, ou selecione-os manualmente.</p>
+        <p>Os arquivos <strong>inicio.mp3</strong> e <strong>fim.mp3</strong> serão automaticamente adicionados ao início e fim da gravação.</p>
       </footer>
     </div>
   </div>
@@ -484,7 +364,7 @@
     <button id="startBtnMobile" class="btn primary">▶</button>
     <button id="pauseBtnMobile" class="btn secondary disabled">II</button>
     <button id="stopBtnMobile" class="btn danger disabled">■</button>
-    <button id="exportBtnMobile" class="btn secondary disabled">MP3</button>
+    <button id="continueBtnMobile" class="btn secondary disabled">Cont.</button>
   </div>
 
   <script>
@@ -493,29 +373,20 @@
       const startBtn = document.getElementById('startBtn');
       const pauseBtn = document.getElementById('pauseBtn');
       const stopBtn = document.getElementById('stopBtn');
-      const exportBtn = document.getElementById('exportBtn');
+      const continueBtn = document.getElementById('continueBtn');
       const downloadLink = document.getElementById('downloadLink');
       const preview = document.getElementById('preview');
       const statusText = document.getElementById('statusText');
-      const levelBar = document.getElementById('levelBar');
       const timerEl = document.getElementById('timer');
       const waveCanv = document.getElementById('wave');
       const replayBtn = document.getElementById('replayBtn');
-      const bitrateRange = document.getElementById('bitrateRange');
-      const bitrateLabel = document.getElementById('bitrateLabel');
 
       // Controles móveis sticky
       const sticky = document.getElementById('stickyControls');
       const startBtnMobile = document.getElementById('startBtnMobile');
       const pauseBtnMobile = document.getElementById('pauseBtnMobile');
       const stopBtnMobile = document.getElementById('stopBtnMobile');
-      const exportBtnMobile = document.getElementById('exportBtnMobile');
-
-      // Inputs de arquivo
-      const inicioInput = document.getElementById('inicioFile');
-      const fimInput = document.getElementById('fimFile');
-      const inicioLabel = document.getElementById('inicioLabel');
-      const fimLabel = document.getElementById('fimLabel');
+      const continueBtnMobile = document.getElementById('continueBtnMobile');
 
       // Variáveis de estado
       let mediaRecorder = null;
@@ -523,7 +394,7 @@
       let recordingBlob = null;
       let streamRef = null;
       let startTime = 0, elapsed = 0, timerInterval = null;
-      let audioFilesLoaded = false;
+      let isPaused = false;
 
       // Configuração de áudio
       const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
@@ -608,34 +479,51 @@
       async function startRecording(){
         try{
           setStatus('Solicitando acesso ao microfone...');
-          const s = await navigator.mediaDevices.getUserMedia({ audio: true });
+          const s = await navigator.mediaDevices.getUserMedia({ 
+            audio: {
+              echoCancellation: true,
+              noiseSuppression: true,
+              sampleRate: 44100,
+              channelCount: 1
+            } 
+          });
           streamRef = s;
-          mediaRecorder = new MediaRecorder(s);
+          mediaRecorder = new MediaRecorder(s, {
+            mimeType: 'audio/webm;codecs=opus'
+          });
           chunks = [];
 
           const src = audioCtx.createMediaStreamSource(s);
           src.connect(analyser);
 
           mediaRecorder.ondataavailable = e => { 
-            if(e.data && e.data.size) chunks.push(e.data); 
+            if(e.data && e.data.size > 0) {
+              chunks.push(e.data);
+            }
           };
           
-          mediaRecorder.onstop = () => {
-            recordingBlob = new Blob(chunks, { type: chunks[0]?.type || 'audio/webm' });
-            preview.src = URL.createObjectURL(recordingBlob);
-            enable(exportBtn, true); 
-            enable(exportBtnMobile, true);
-            setStatus('Gravação concluída. Pronto para exportar.');
-            
-            if(streamRef){ 
-              streamRef.getTracks().forEach(t => t.stop()); 
-              streamRef = null; 
+          mediaRecorder.onstop = async () => {
+            try {
+              setStatus('Processando gravação...');
+              recordingBlob = new Blob(chunks, { type: 'audio/webm' });
+              preview.src = URL.createObjectURL(recordingBlob);
+              enable(continueBtn, true); 
+              enable(continueBtnMobile, true);
+              setStatus('Gravação concluída. Toque em "Continuar" para processar.');
+              
+              if(streamRef){ 
+                streamRef.getTracks().forEach(t => t.stop()); 
+                streamRef = null; 
+              }
+            } catch (err) {
+              console.error('Erro ao processar gravação:', err);
+              setStatus('Erro ao processar gravação');
             }
             
             stopTimer();
           };
 
-          mediaRecorder.start();
+          mediaRecorder.start(100); // Coletar dados a cada 100ms para melhor performance
           setStatus('Gravando...');
           enable(pauseBtn, true); 
           enable(pauseBtnMobile, true);
@@ -643,19 +531,10 @@
           enable(stopBtnMobile, true);
           enable(startBtn, false); 
           enable(startBtnMobile, false);
+          enable(continueBtn, false);
+          enable(continueBtnMobile, false);
+          isPaused = false;
           startTimer();
-
-          // Medidor de nível de áudio
-          (function levelLoop(){
-            analyser.getByteFrequencyData(dataArray);
-            let sum = 0; 
-            for(let i = 0; i < dataArray.length; i++){ 
-              sum += dataArray[i] * dataArray[i]; 
-            }
-            const rms = Math.sqrt(sum / dataArray.length) / 128;
-            levelBar.style.width = Math.min(100, rms * 150) + '%';
-            requestAnimationFrame(levelLoop);
-          })();
 
         } catch(err) { 
           console.error(err); 
@@ -673,6 +552,7 @@
           setStatus('Pausado'); 
           enable(pauseBtn, false); 
           enable(pauseBtnMobile, false); 
+          isPaused = true;
           stopTimer(); 
         } 
       });
@@ -683,11 +563,12 @@
           setStatus('Pausado'); 
           enable(pauseBtn, false); 
           enable(pauseBtnMobile, false); 
+          isPaused = true;
           stopTimer(); 
         } 
       });
 
-      // Botão de retomar (adicionado funcionalidade)
+      // Botão de retomar
       const resumeBtn = document.createElement('button');
       resumeBtn.textContent = '↻ Retomar';
       resumeBtn.className = 'btn secondary disabled';
@@ -698,12 +579,29 @@
           enable(pauseBtn, true); 
           enable(pauseBtnMobile, true); 
           enable(resumeBtn, false); 
+          isPaused = false;
           startTimer(); 
         } 
       });
       
       // Inserir o botão de retomar após o botão de pausar
       pauseBtn.parentNode.insertBefore(resumeBtn, pauseBtn.nextSibling);
+
+      // Adicionar também para mobile
+      const resumeBtnMobile = document.createElement('button');
+      resumeBtnMobile.textContent = '↻';
+      resumeBtnMobile.className = 'btn secondary disabled';
+      resumeBtnMobile.addEventListener('click', () => {
+        if(mediaRecorder && mediaRecorder.state === 'paused'){ 
+          mediaRecorder.resume(); 
+          setStatus('Gravando...'); 
+          enable(pauseBtn, true); 
+          enable(pauseBtnMobile, true); 
+          enable(resumeBtnMobile, false); 
+          isPaused = false;
+          startTimer(); 
+        } 
+      });
 
       stopBtn.addEventListener('click', () => { 
         if(mediaRecorder && (mediaRecorder.state === 'recording' || mediaRecorder.state === 'paused')){ 
@@ -714,8 +612,10 @@
           enable(pauseBtn, false); 
           enable(pauseBtnMobile, false); 
           enable(resumeBtn, false);
+          enable(resumeBtnMobile, false);
           enable(startBtn, true); 
           enable(startBtnMobile, true); 
+          isPaused = false;
         } 
       });
       
@@ -727,6 +627,7 @@
           enable(stopBtnMobile, false); 
           enable(startBtn, true); 
           enable(startBtnMobile, true); 
+          isPaused = false;
         } 
       });
 
@@ -734,30 +635,20 @@
         if(preview.src) preview.play(); 
       });
 
-      bitrateRange.addEventListener('input', () => { 
-        bitrateLabel.textContent = bitrateRange.value + ' kbps'; 
-      });
-
       // Processamento de arquivos de áudio
-      async function fetchAndDecodeFile(fileInput, fallbackName){
+      async function fetchAndDecodeFile(filename){
         try{
-          if(fileInput && fileInput.files && fileInput.files.length){
-            const f = fileInput.files[0];
-            const ab = await f.arrayBuffer();
-            return await audioCtx.decodeAudioData(ab.slice(0));
-          } else {
-            const resp = await fetch(fallbackName);
-            if(!resp.ok) {
-              setStatus(`Erro: Arquivo ${fallbackName} não encontrado`);
-              return null;
-            }
-            const ab = await resp.arrayBuffer();
-            return await audioCtx.decodeAudioData(ab.slice(0));
+          const resp = await fetch(filename);
+          if(!resp.ok) {
+            setStatus(`Erro: Arquivo ${filename} não encontrado`);
+            throw new Error(`Arquivo ${filename} não encontrado`);
           }
+          const ab = await resp.arrayBuffer();
+          return await audioCtx.decodeAudioData(ab.slice(0));
         } catch(e) { 
-          console.warn('Não foi possível carregar', fallbackName, e); 
-          setStatus(`Erro ao carregar ${fallbackName}`);
-          return null; 
+          console.warn('Não foi possível carregar', filename, e); 
+          setStatus(`Erro ao carregar ${filename}`);
+          throw e;
         }
       }
 
@@ -794,46 +685,39 @@
         return out; 
       }
 
-      // Exportar para MP3
-      async function doExport(){
+      // Processar áudio e gerar MP3
+      async function processAudio(){
         if(!recordingBlob){ 
           setStatus('Nenhuma gravação disponível.'); 
           return; 
         }
         
-        enable(exportBtn, false); 
-        enable(exportBtnMobile, false);
+        enable(continueBtn, false); 
+        enable(continueBtnMobile, false);
         setStatus('Carregando áudios de início e fim...');
         
         try{
           const [introBuf, outroBuf] = await Promise.all([
-            fetchAndDecodeFile(inicioInput, 'inicio.mp3'),
-            fetchAndDecodeFile(fimInput, 'fim.mp3')
+            fetchAndDecodeFile('inicio.mp3'),
+            fetchAndDecodeFile('fim.mp3')
           ]);
-          
-          if (!introBuf || !outroBuf) {
-            setStatus('Erro: Não foi possível carregar os áudios de início e/ou fim');
-            enable(exportBtn, true); 
-            enable(exportBtnMobile, true);
-            return;
-          }
           
           setStatus('Processando gravação...');
           const recAB = await recordingBlob.arrayBuffer();
           const recBuf = await audioCtx.decodeAudioData(recAB.slice(0));
           const segments = [];
           
+          // Adicionar intro, gravação e outro
           segments.push(toMonoFloat32(introBuf));
           segments.push(toMonoFloat32(recBuf));
           segments.push(toMonoFloat32(outroBuf));
           
           const combined = concatFloat32(segments);
           const sampleRate = recBuf.sampleRate || audioCtx.sampleRate || 44100;
-          setStatus('Codificando MP3...');
+          setStatus('Codificando MP3 (320 kbps)...');
 
-          // Codificação com lamejs
-          const bitrate = parseInt(bitrateRange.value, 10) || 128;
-          const mp3Encoder = new lamejs.Mp3Encoder(1, sampleRate, bitrate);
+          // Codificação com lamejs em 320 kbps (fixo)
+          const mp3Encoder = new lamejs.Mp3Encoder(1, sampleRate, 320);
           const samples16 = floatTo16BitPCM(combined);
           const mp3Data = [];
           const maxSamples = 1152 * 6; // Tamanho otimizado para mobile
@@ -853,37 +737,43 @@
           downloadLink.style.display = 'block'; 
           preview.src = url; 
           replayBtn.style.display = 'inline-flex'; 
-          setStatus('MP3 pronto para download'); 
+          setStatus('MP3 pronto para download!'); 
           downloadLink.download = 'entrevista.mp3';
           
         } catch(err) { 
           console.error(err); 
-          setStatus('Erro ao gerar MP3: ' + (err.message || err)); 
-          enable(exportBtn, true); 
-          enable(exportBtnMobile, true); 
+          setStatus('Erro ao processar áudio: ' + (err.message || err)); 
+          enable(continueBtn, true); 
+          enable(continueBtnMobile, true); 
         }
       }
 
-      exportBtn.addEventListener('click', doExport);
-      exportBtnMobile.addEventListener('click', doExport);
-
-      // Atualizar labels dos arquivos
-      inicioInput.addEventListener('change', () => { 
-        inicioLabel.innerHTML = inicioInput.files.length ? 
-          `<span>✅ ${inicioInput.files[0].name}</span><small>Intro selecionada</small>` : 
-          `<span>➕ Adicionar Intro (inicio.mp3)</span><small>Será adicionado automaticamente ao início</small>`; 
-      });
-      
-      fimInput.addEventListener('change', () => { 
-        fimLabel.innerHTML = fimInput.files.length ? 
-          `<span>✅ ${fimInput.files[0].name}</span><small>Outro selecionado</small>` : 
-          `<span>➕ Adicionar Outro (fim.mp3)</span><small>Será adicionado automaticamente ao final</small>`; 
-      });
+      continueBtn.addEventListener('click', processAudio);
+      continueBtnMobile.addEventListener('click', processAudio);
 
       // Mostrar/ocultar controles sticky no mobile
       function updateSticky(){ 
         if(window.innerWidth <= 768){ 
           sticky.style.display = 'flex'; 
+          
+          // Adicionar botão de retomar para mobile se ainda não estiver lá
+          if (!document.getElementById('resumeBtnMobile')) {
+            const resumeBtnMobile = document.createElement('button');
+            resumeBtnMobile.id = 'resumeBtnMobile';
+            resumeBtnMobile.textContent = '↻';
+            resumeBtnMobile.className = 'btn secondary disabled';
+            resumeBtnMobile.addEventListener('click', () => {
+              if(mediaRecorder && mediaRecorder.state === 'paused'){ 
+                mediaRecorder.resume(); 
+                setStatus('Gravando...'); 
+                enable(pauseBtnMobile, true); 
+                enable(resumeBtnMobile, false); 
+                isPaused = false;
+                startTimer(); 
+              } 
+            });
+            pauseBtnMobile.parentNode.insertBefore(resumeBtnMobile, pauseBtnMobile.nextSibling);
+          }
         } else { 
           sticky.style.display = 'none'; 
         } 
